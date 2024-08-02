@@ -1,0 +1,14 @@
+# Node modules
+/backend/node_modules/
+
+# Build directories
+/backend/dist/
+
+# Logs
+/backend/logs/
+*.log
+npm-debug.log*
+
+# OS specific files
+.DS_Store
+Thumbs.db
