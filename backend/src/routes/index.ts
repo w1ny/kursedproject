@@ -1,11 +1,12 @@
-import { Router, Request, Response } from "express";
+// src/routes/index.ts
+import { Router } from "express";
+import { CreateUserConfirmationController } from "../controllers/userConfirmation/CreateUserConfirmationController";
+import { UpdateUserConfirmationController } from "../controllers/userConfirmation/UpdateUserConfirmationController";
 
 const router = Router();
 
-router.get("/test", (req: Request, res: Response) => {
-	return res.json({
-		ok: true,
-	});
-});
+router.post("/signup", new CreateUserConfirmationController().handle);
+router.get("/confirm", new UpdateUserConfirmationController().handle);
 
-export { router };
+
+export default router;
