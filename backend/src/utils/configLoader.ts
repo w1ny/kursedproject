@@ -11,7 +11,7 @@ export class LoadConfig {
 		const emailConfig = {
 			service: await this.retrieveConfigService.execute("emailService"),
 			auth: {
-				user: await this.retrieveConfigService.execute("emailUser"),
+				account: await this.retrieveConfigService.execute("emailAccount"),
 				pass: await this.retrieveConfigService.execute("emailPass"),
 			},
 			from: await this.retrieveConfigService.execute("emailFrom"),
@@ -32,7 +32,7 @@ export class LoadConfig {
 		return await this.retrieveConfigService.execute("baseUrl");
 	}
 
-	async getconfirmationExpiryDays() {
+	async getConfirmationExpiryDays() {
 		return Number(await this.retrieveConfigService.execute("confirmationExpiryDays"));
 	}
 }

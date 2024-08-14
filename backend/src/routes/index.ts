@@ -1,12 +1,12 @@
 // src/routes/index.ts
 import { Router } from "express";
-import { CreateUserConfirmationController } from "../controllers/userConfirmation/CreateUserConfirmationController";
-import { UpdateUserConfirmationController } from "../controllers/userConfirmation/UpdateUserConfirmationController";
+import { CreateAccountConfirmationController } from "../controllers/accountConfirmation/CreateAccountConfirmationController";
+import { UpdateAccountConfirmationController } from "../controllers/accountConfirmation/UpdateAccountConfirmationController";
 
 const router = Router();
 
-router.post("/signup", new CreateUserConfirmationController().handle);
-router.get("/confirm", new UpdateUserConfirmationController().handle);
+router.post("/signup", new CreateAccountConfirmationController().handle);
+router.get("/signup/confirm", new UpdateAccountConfirmationController().handle);
 
 
 export default router;

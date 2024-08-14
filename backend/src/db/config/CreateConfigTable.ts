@@ -13,9 +13,9 @@ export class CreateConfigTable {
     `;
 		try {
 			await query(queryText);
-			console.log("Configuration table created successfully");
+			console.log("(configuration) table created successfully");
 		} catch (err) {
-			console.error("Error creating configuration table:", err);
+			console.error("Error creating (configuration) table:", err);
 		}
 	}
 }

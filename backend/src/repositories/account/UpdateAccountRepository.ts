@@ -1,10 +1,10 @@
 import { query } from "../../db/dbConfig";
-import { UserInterface } from "../../model/user/User";
+import { AccountInterface } from "../../model/account/Account";
 
-export class UpdateUserRepository {
-	async query({ id, username, email, walletAddress }: UserInterface) {
+export class UpdateAccountRepository {
+	async query({ id, username, email, walletAddress }: AccountInterface) {
 		const queryText = `
-      UPDATE user
+      UPDATE account
       SET username = $1, email = $2, walletAddress = $3, updatedAt = CURRENT_TIMESTAMP
       WHERE id = $4
       RETURNING *;
@@ -13,23 +13,23 @@ export class UpdateUserRepository {
 			const res = await query(queryText, [username, email, walletAddress, id]);
 			return res.rows[0];
 		} catch (err) {
-			console.error("Error updating user:", err);
+			console.error("Error updating account:", err);
 			throw err;
 		}
 	}
 
-	async updateUserWallet(userId: string, walletAddress: string) {
+	async updateAccountWallet(accountId: string, walletAddress: string) {
 		const queryText = `
-      UPDATE user
+      UPDATE account
       SET walletAddress = $1, updatedAt = CURRENT_TIMESTAMP
       WHERE id = $2
       RETURNING *;
     `;
 		try {
-			const res = await query(queryText, [walletAddress, userId]);
+			const res = await query(queryText, [walletAddress, accountId]);
 			return res.rows[0];
 		} catch (err) {
-			console.error("Error updating user wallet:", err);
+			console.error("Error updating account wallet:", err);
 			throw err;
 		}
 	}

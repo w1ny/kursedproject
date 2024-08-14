@@ -6,8 +6,8 @@ export class CreateConfigService {
 		const createConfigRepository = new CreateConfigRepository();
 
 		try {
-			const user = createConfigRepository.query({ key, value });
-			return user;
+			const account = createConfigRepository.query({ key, value });
+			return account;
 		} catch (err: any) {}
 	}
 }

@@ -1,13 +1,13 @@
-import { CreateUserTable } from "./user/CreateUserTable";
+import { CreateAccountTable } from "./account/CreateAccountTable";
 import { CreateConfigTable } from "./config/CreateConfigTable";
-import { CreateUserConfirmationTableRepository } from "./userConfirmation/CreateUserConfirmationTable";
+import { CreateAccountConfirmationTableRepository } from "./accountConfirmation/CreateAccountConfirmationTable";
 
 export const initializeDatabase = async () => {
-	const createUserTable = new CreateUserTable();
+	const createAccountTable = new CreateAccountTable();
 	const createConfigTable = new CreateConfigTable();
-	const createUserConfirmationTable = new CreateUserConfirmationTableRepository();
+	const createAccountConfirmationTable = new CreateAccountConfirmationTableRepository();
 
-	await createUserTable.query();
+	await createAccountTable.query();
 	await createConfigTable.query();
-	await createUserConfirmationTable.query();
+	await createAccountConfirmationTable.query();
 };

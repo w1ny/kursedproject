@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { LoadConfig } from "./configLoader";
 
 export const getTransporter = async () => {
@@ -8,7 +9,7 @@ export const getTransporter = async () => {
 	const transporter = nodemailer.createTransport({
 		service: emailConfig.service,
 		auth: emailConfig.auth,
-	});
+	  } as SMTPTransport.Options);
 
 	return transporter;
 };

@@ -5,8 +5,8 @@ export class RetrieveConfigService {
 		const retrieveConfigRepository = new RetrieveConfigRepository();
 
 		try {
-			const user = retrieveConfigRepository.query(key);
-			return user;
+			const account = retrieveConfigRepository.query(key);
+			return account;
 		} catch (err: any) {}
 	}
 }
