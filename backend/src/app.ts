@@ -1,8 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
-import { initializeDatabase } from "./db/dbInitialize";
 import router from "./routes";
-import "./cron";
+import "./utils/cron";
 
 const app = express();
 const port = 7777;
@@ -12,8 +11,6 @@ let config: any;
 app.use(express.json());
 
 app.use(router);
-
-initializeDatabase();
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 	if (err instanceof Error) {
