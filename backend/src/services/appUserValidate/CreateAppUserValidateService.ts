@@ -1,10 +1,21 @@
 import { CreateAppUserValidateRepository } from "../../repositories/appUserValidate/CreateAppUserValidateRepository";
 import { ReadAppUserRepository } from "../../repositories/appUser/ReadAppUserRepository";
-import { AppUserValidateInterface } from "../../model/appUserValidate/AppUserValidate";
 import { ReadConfigurationService } from "../configuration/ReadConfigurationService";
 import { SendEmailAppUserValidateService } from "../email/EmailAppUserValidateService";
 import { hash } from "bcryptjs";
 import crypto from "crypto";
+
+interface AppUserValidate {
+	username: string;
+	email: string;
+	password: string;
+}
+
+interface ValidationEmail {
+	username: string;
+	email: string;
+	token: string;	
+}
 
 export class CreateAppUserValidateService {
 	private createAppUserValidateRepository: CreateAppUserValidateRepository;
@@ -15,7 +26,7 @@ export class CreateAppUserValidateService {
 		this.emailAppUserValidateService = new SendEmailAppUserValidateService();
 	}
 
-	async execute({ username, email, password }: Omit<AppUserValidateInterface, "token">) {
+	execute = async ({ username, email, password }: AppUserValidate) => {
 		await this.validateUserInput(email, password, username);
 
 		try {
@@ -29,23 +40,23 @@ export class CreateAppUserValidateService {
 				token,
 			});
 
-			if (userValidation) {
-				try {
-					await this.sendEmail({ username, email, token });
-				} catch (err: any) {
-					console.error("Error sending account confirmation email:", err.message);
-					throw new Error("Failed to send confirmation email.");
-				}
-			}
+			// if (userValidation) {
+			// 	try {
+			// 		await this.sendEmail({ username, email, token });
+			// 	} catch (err: any) {
+			// 		console.error("Error sending validation email:", err.message);
+			// 		throw new Error("Failed to send validation email.");
+			// 	}
+			// }
 
 			return userValidation;
 		} catch (err: any) {
-			console.error("Error creating account confirmation:", err.message);
-			throw new Error("Failed to create account validation.");
+			console.error("Error creating user validation:", err.message);
+			throw new Error("Failed to create user validation.");
 		}
-	}
+	};
 
-	async sendEmail({ username, email, token }: Omit<AppUserValidateInterface, "password">) {
+	sendEmail = async ({ username, email, token }: ValidationEmail) => {
 		const readConfigService = new ReadConfigurationService();
 
 		try {
@@ -61,17 +72,13 @@ export class CreateAppUserValidateService {
 		}
 	}
 
-	private validateEmail(email: string): boolean {
+	private validateEmail = (email: string): boolean => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		return emailRegex.test(email);
 	}
 
-	private async validateUserInput(email: string, password: string, username: string) {
+	private validateUserInput = async (email: string, password: string, username: string) => {
 		const readAppUserRepository = new ReadAppUserRepository();
-
-		if (!email || !password || !username) {
-			throw new Error("Check that all fields have been filled in.");
-		}
 
 		if (username.length > 20) {
 			throw new Error("Username must have a maximum of 20 characters.");

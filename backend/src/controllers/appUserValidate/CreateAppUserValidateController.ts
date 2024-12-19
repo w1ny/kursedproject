@@ -8,18 +8,19 @@ export class CreateAppUserValidateController {
 		this.createAppUserValidateService = new CreateAppUserValidateService();
 	}
 
-	async handle(req: Request, res: Response) {
+	handle = async (req: Request, res: Response) => {
 		const { username, email, password } = req.body;
 		try {
 			if (!username || !email || !password) {
 				return res.status(400).json({ error: "Login and password are required." });
 			}
 
+			console.log(this.createAppUserValidateService);
 			const appUserValidate = await this.createAppUserValidateService.execute({ username, email, password });
 
 			res.status(201).json(appUserValidate);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
-	}
+	};
 }

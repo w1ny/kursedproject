@@ -1,11 +1,18 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
-import { AppUserInterface } from "../../model/appUser/AppUser";
 
 const prisma = new PrismaClient();
 
+export interface AppUser {
+	username: string;
+	email: string;
+	password: string;
+	nickname: string;
+	walletId?: string | null;
+}
+
 export class CreateAppUserRepository {
-  async create({ username, email, password, nickname, walletId }: Omit<AppUserInterface, "id" >) {
+  async create({ username, email, password, nickname, walletId }: AppUser) {
     try {
       const appUser = await prisma.appUser.create({
         data: {

@@ -32,17 +32,14 @@ model AppUser {
   walletId  String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  wallet AppUserWallet? @relation(fields: [walletId], references: [id])
 }
 
-model AppUserWallet {
-  id        String   @id @default(uuid())
-  address   String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  AppUser   AppUser?
-}
+// model AppUserWallet {
+//   id        String   @id @default(uuid())
+//   address   String   @unique @db.VarChar(255)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 model Configuration {
   id        String   @id @default(uuid())

@@ -1,5 +1,12 @@
 import { CreateAppUserRepository } from "../../repositories/appUser/CreateAppUserRepository";
-import { AppUserInterface } from "../../model/appUser/AppUser";
+
+export interface AppUser {
+	username: string;
+	email: string;
+	password: string;
+	nickname: string;
+	walletId?: string | null;
+}
 
 export class CreateAppUserService {
 	private createAppUserRepository: CreateAppUserRepository;
@@ -8,7 +15,7 @@ export class CreateAppUserService {
 		this.createAppUserRepository = new CreateAppUserRepository();
 	}
 
-	async execute({ username, email, password, nickname, walletId }: Omit<AppUserInterface, "id">) {
+	async execute({ username, email, password, nickname, walletId }: AppUser) {
 		try {
 			if (!username || !email || !password || !nickname) {
 				throw new Error("All fields (username, email, password, and nickname) are required.");

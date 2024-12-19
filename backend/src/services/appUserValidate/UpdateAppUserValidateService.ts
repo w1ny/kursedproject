@@ -13,20 +13,20 @@ export class UpdateAppUserValidateService {
 		this.createAppUserRepository = new CreateAppUserRepository();
 	}
 
-	async execute(token: string, nickname: string, walletId: string | null) {
+	execute = async (token: string, nickname: string, walletId: string | null) => {
 		try {
 			const appUserValidation = await this.readAppUserValidateRepository.getByToken(token);
 
 			if (!appUserValidation) {
 				throw new Error("Invalid or expired token.");
 			}
-			
+
 			const appUser = await this.createAppUserRepository.create({
 				username: appUserValidation.username,
 				email: appUserValidation.email,
 				password: appUserValidation.password,
-				nickname: nickname, 
-				walletId: walletId, 
+				nickname: nickname,
+				walletId: walletId,
 			});
 
 			await this.deleteAppUserValidateRepository.deleteById(appUserValidation.id);
@@ -36,5 +36,5 @@ export class UpdateAppUserValidateService {
 			console.error("Error confirming app user:", err);
 			throw err;
 		}
-	}
+	};
 }

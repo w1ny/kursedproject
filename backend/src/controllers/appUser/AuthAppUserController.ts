@@ -8,14 +8,14 @@ export class AuthAppUserController {
 		this.authAppUserService = new AuthAppUserService();
 	}
 
-	async handle(req: Request, res: Response): Promise<Response> {
+	handle = async (req: Request, res: Response): Promise<Response> => {
 		try {
 			const { login, password } = req.body;
 
 			if (!login || !password) {
 				return res.status(400).json({ error: "Login and password are required." });
 			}
-
+			
 			const auth = await this.authAppUserService.execute({ login, password });
 
 			return res.status(200).json(auth);
@@ -23,5 +23,5 @@ export class AuthAppUserController {
 			console.error("Error in AuthAppUserController:", err);
 			return res.status(500).json({ error: err.message });
 		}
-	}
+	};
 }

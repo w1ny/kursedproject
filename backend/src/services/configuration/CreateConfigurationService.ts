@@ -1,5 +1,9 @@
 import { CreateConfigurationRepository } from "../../repositories/configuration/CreateConfigurationRepository";
-import { ConfigurationInterface } from "../../model/configuration/Configuration";
+
+export interface Configuration {
+	key: string;
+	value: string;
+}
 
 export class CreateConfigurationService {
 	private createConfigurationService: CreateConfigurationRepository;
@@ -8,7 +12,7 @@ export class CreateConfigurationService {
 		this.createConfigurationService = new CreateConfigurationRepository();
 	}
 
-	async execute({ key, value }: Omit<ConfigurationInterface, "id">): Promise<ConfigurationInterface | null> {
+	async execute({ key, value }: Configuration): Promise<Configuration | null> {
 		try {
 			const config = await this.createConfigurationService.upsertConfig(key, value);
 			return config;
