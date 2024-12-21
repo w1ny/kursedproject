@@ -1,12 +1,18 @@
 import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
 import router from "./routes";
-import "./utils/cron";
+import cors from "cors";
 
 const app = express();
 const port = 7777;
 
-let config: any;
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization", "walletaddress"],
+	})
+);
 
 app.use(express.json());
 

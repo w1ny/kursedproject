@@ -13,33 +13,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AppUserValidate {
-  id        String   @id @default(uuid())
-  username  String   @unique @db.VarChar(20)
-  email     String   @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  token     String   @unique @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum UserType {
+  owner
+  admin
+  user
+}
+
+enum NetworkType {
+  mainnet
+  testnet
+}
+
+enum TransactionType {
+  send
+  receive
+  contract_call
+  approve
+  stake
+  other
+}
+
+enum TransactionStatus {
+  pending
+  success
+  failed
 }
 
 model AppUser {
-  id        String   @id @default(uuid())
-  username  String   @unique @db.VarChar(20)
-  nickname  String   @db.VarChar(50)
-  email     String   @unique @db.VarChar(100)
-  password  String   @db.VarChar(255)
-  walletId  String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  username    String   @unique @db.VarChar(50)
+  walletId    String   @unique
+  type        UserType @default(user)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
 }
 
-// model AppUserWallet {
-//   id        String   @id @default(uuid())
-//   address   String   @unique @db.VarChar(255)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+model Wallet {
+  id                 String   @id @default(uuid())
+  address            String   @unique @db.VarChar(42)
+  connectedAt        DateTime @default(now())
+  network            String   @db.VarChar(50)
+  balance            Decimal  @default(0.0) @db.Decimal(18, 8)
+  lastActivityAt     DateTime @default(now()) @updatedAt
+  networkType        NetworkType @default(testnet)
+  clientVersion      String?  @db.VarChar(255)
+  WalletTransactions WalletTransactions[]
+  appUser            AppUser?  
+}
+
+model WalletTransactions {
+  id              String   @id @default(uuid())
+  transactionHash String   @unique @db.VarChar(66)
+  walletAddress   String   @db.VarChar(42)
+  transactionType TransactionType
+  amount          Decimal  @default(0.0) @db.Decimal(18, 8)
+  currency        String   @default("ETH") @db.VarChar(50)
+  status          TransactionStatus @default(pending)
+  gasFee          Decimal  @default(0.0) @db.Decimal(18, 8)
+  toAddress       String?  @db.VarChar(42)
+  fromAddress     String?  @db.VarChar(42)
+  blockNumber     BigInt?
+  createdAt       DateTime @default(now())
+  wallet          Wallet   @relation(fields: [walletAddress], references: [address], onDelete: Cascade)
+}
 
 model Configuration {
   id        String   @id @default(uuid())

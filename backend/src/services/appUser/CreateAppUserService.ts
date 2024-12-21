@@ -1,32 +1,34 @@
 import { CreateAppUserRepository } from "../../repositories/appUser/CreateAppUserRepository";
+import { ReadAppUserRepository } from "../../repositories/appUser/ReadAppUserRepository";
 
 export interface AppUser {
 	username: string;
-	email: string;
-	password: string;
-	nickname: string;
-	walletId?: string | null;
+	walletId: string;
 }
 
 export class CreateAppUserService {
 	private createAppUserRepository: CreateAppUserRepository;
+	private readAppUserRepository: ReadAppUserRepository;
 
 	constructor() {
 		this.createAppUserRepository = new CreateAppUserRepository();
+		this.readAppUserRepository = new ReadAppUserRepository();
 	}
 
-	async execute({ username, email, password, nickname, walletId }: AppUser) {
+	async execute({ username, walletId }: AppUser) {
 		try {
-			if (!username || !email || !password || !nickname) {
-				throw new Error("All fields (username, email, password, and nickname) are required.");
+			if (!username || !walletId) {
+				throw new Error("Username and walletId are required.");
+			}
+
+			const existingUser = await this.readAppUserRepository.findByWalletId(walletId);
+			if (existingUser) {
+				throw new Error("A user with this wallet already exists.");
 			}
 
 			const account = await this.createAppUserRepository.create({
 				username,
-				email,
-				password,
-				nickname,
-				walletId: walletId || null,
+				walletId,
 			});
 
 			return account;

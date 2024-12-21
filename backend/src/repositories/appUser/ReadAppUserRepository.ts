@@ -9,11 +9,9 @@ export class ReadAppUserRepository {
 				where: { id: id },
 				select: {
 					id: true,
-					username: true,					
-					nickname: true,
-					email: true,
-					walletId: true
-				}
+					username: true,
+					walletId: true,
+				},
 			});
 		} catch (err) {
 			console.error("Error retrieving AppUser by ID:", err);
@@ -32,52 +30,38 @@ export class ReadAppUserRepository {
 		}
 	};
 
-	getByEmail = async (email: string) => {
+	findByWalletId = async (walletId: string) => {
 		try {
 			return await prisma.appUser.findUnique({
-				where: { email },
+				where: { walletId },
 			});
 		} catch (err) {
-			console.error("Error retrieving AppUser by email:", err);
+			console.error("Error retrieving AppUser by username:", err);
 			throw err;
 		}
 	};
 
-	getByLoginInfo = async (login: string) => {
+	getByWalletAddress = async (walletAddress: string) => {
 		try {
 			return await prisma.appUser.findFirst({
 				where: {
-					OR: [{ email: login }, { username: login }],
+					wallet: {
+						address: walletAddress,
+					},
+				},
+				select: {
+					id: true,
+					username: true,
+					walletId: true,
+					wallet: {
+						select: {
+							address: true,
+						},
+					},
 				},
 			});
 		} catch (err) {
-			console.error("Error retrieving AppUser by login info:", err);
-			throw err;
-		}
-	};
-
-	getByLoginAndPassword = async (login: string, password: string) => {
-		try {
-			return await prisma.appUser.findFirst({
-				where: {
-					AND: [{ OR: [{ email: login }, { username: login }] }, { password }],
-				},
-			});
-		} catch (err) {
-			console.error("Error retrieving AppUser by login and password:", err);
-			throw err;
-		}
-	};
-
-	getByUsernameOrEmailAndPassword = async (username: string, email: string, password: string) => {
-		try {
-			return await prisma.appUser.findFirst({
-				where: {
-					AND: [{ OR: [{ email }, { username }] }, { password }],
-				},
-			});
-		} catch (err) {
-			console.error("Error retrieving AppUser by username/email and password:", err);
+			console.error("Error retrieving AppUser by wallet address:", err);
 			throw err;
 		}
 	};
